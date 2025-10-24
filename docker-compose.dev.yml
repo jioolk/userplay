@@ -1,0 +1,57 @@
+services:
+  userplay:
+    build:
+      context: .
+      dockerfile: build/dev/Dockerfile
+    container_name: userplay
+    # Enable Xdebug port
+    ports:
+      - "${APP_BASE_PORT}:80"
+      - "9003:9003"
+
+    volumes:
+      # Mount source code for easy development
+      - ./:/var/www/html
+      # Mount composer cache for faster installs
+      - composer_cache:/root/.composer
+      # Mount temp directory for cache
+      - ./temp:/var/www/html/temp
+    environment:
+      - APP_ENV=development
+      - APP_BASE_URL=${APP_BASE_URL}
+      - APP_BASE_PORT=${APP_BASE_PORT}
+      - MYSQL_DB_HOST=${MYSQL_DB_HOST:-userplay_db}
+      - MYSQL_DB_PORT=${MYSQL_DB_PORT:-3306}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-userplay}
+      - MYSQL_USER=${MYSQL_USER:-userplay}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-userplay}
+    depends_on:
+      - userplay_db
+    entrypoint: /var/www/html/docker-entrypoint.sh
+    networks:
+      - userplay_network
+
+
+  userplay_db:
+    image: mysql:8.0
+    container_name: userplay_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-userplay}
+      MYSQL_USER: ${MYSQL_USER:-userplay}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-userplay}
+    ports:
+      - "${MYSQL_DB_PORT:-3306}:3306"
+    volumes:
+        # Mount db for persistence, easy backups and overall performance - mysql does not like being dockerized for high loads
+      - ../temp/userplay_mysql:/var/lib/mysql
+    networks:
+      - userplay_network
+
+volumes:
+  composer_cache:
+
+networks:
+  userplay_network:
+    driver: bridge

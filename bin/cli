@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php declare(strict_types = 1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$bootstrap = new UserPlay\Bootstrap;
+$container = $bootstrap->bootCLIApplication();
+exit($container->getByType(Symfony\Component\Console\Application::class)->run());

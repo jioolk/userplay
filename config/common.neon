@@ -1,0 +1,14 @@
+database:
+	dsn:      '%database.type%:host=%database.host%;dbname=%database.name%'
+	user:     %database.user%
+	password: %database.pass%
+	debugger: true
+
+di:
+	export:
+		parameters: yes
+		tags: no
+
+services:
+	- UserPlay\Core\Configuration
+	- UserPlay\Model\UserModel

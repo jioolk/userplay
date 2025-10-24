@@ -1,0 +1,40 @@
+parameters:
+    project:
+        name: "UserPlay Nette playground"
+        version: 0.0.1
+
+    user:
+        min-age: 20
+        max-age: 100
+
+    database:
+        type: mysql
+        adapter: %database.type%
+        host: %ENV.MYSQL_DB_HOST%
+        port: %ENV.MYSQL_DB_PORT%
+        name: %ENV.MYSQL_DATABASE%
+        user: %ENV.MYSQL_USER%
+        pass: %ENV.MYSQL_PASSWORD%
+        charset: utf8mb4
+
+    # configuration for migrations
+    # Phinx itself does not know .neon format, but knows yaml/json, so we do prepare its configuration based on this shared .neon JIT before execution
+    # Therefore whole app takes config from single point and there can be no misconfig unless you try hard
+    phinx:
+        paths:
+            migrations: %rootDir%/db/migrations
+            seeds: %rootDir%/db/seeds
+
+        environments:
+          default_migration_table: versiondb
+          default_environment: all
+          all : %database%  # equals to latter, not sure which syntax is nicer.
+
+  #          all:
+  #            adapter: %database.type%
+  #            host:    %database.host%
+  #            name:    %database.name%
+  #            user:    %database.user%
+  #            pass:    %database.pass%
+  #            port:    %database.port%
+  #            charset: %database.charset%

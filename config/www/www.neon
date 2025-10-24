@@ -1,0 +1,28 @@
+application:
+	errorPresenter:
+		4xx: Error:Error4xx
+		5xx: Error:Error5xx
+	mapping: UserPlay\Presentation\*\**Presenter
+
+assets:
+	mapping:
+		default:
+			path: assets
+
+latte:
+	strictTypes: yes
+	strictParsing: yes
+	extensions:
+		- UserPlay\Presentation\Accessory\LatteExtension
+
+services:
+	- UserPlay\Core\RouterFactory::createRouter
+
+search:
+	-	in: %appDir%
+		classes:
+			- *Facade
+			- *Factory
+			- *Repository
+			- *Service
+			- *Model

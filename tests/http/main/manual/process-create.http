@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/user/process
+Content-Type: application/json
+
+{
+    "name": "Named via API",
+    "email": "not-exisitng@test.com",
+    "dateOfBirth": "1980-02-10"
+}

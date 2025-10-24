@@ -1,0 +1,13 @@
+extensions:
+	console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+
+console:
+    name: %project.name%
+    version: %project.version%
+    catchExceptions: false #true / false
+    autoExit: false        #true / false
+    url: http://localhost #  %public_url%
+
+services:
+	- UserPlay\Console\App\InfoCommand
+	- UserPlay\Console\Phinx\DumpPhinxConfigCommand

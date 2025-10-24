@@ -1,0 +1,36 @@
+### test basic create/update
+POST http://localhost:8080/api/user/process
+Content-Type: application/json
+
+{
+    "name": "First test",
+    "email": "test@test.com",
+    "dateOfBirth": "1984-02-10"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.successful == true, "Should have returned success")
+    });
+%}
+
+### test basic update of previous
+POST http://localhost:8080/api/user/process
+Content-Type: application/json
+
+{
+    "name": "First test - update",
+    "email": "test@test.com",
+    "dateOfBirth": "2000-02-10"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.successful == true, "Should have returned success")
+    });
+%}
+
+### end
+GET http://localhost:8080/

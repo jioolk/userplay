@@ -1,0 +1,145 @@
+{block content}
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-6 col-lg-5">
+			<div class="form-container p-4">
+				<div class="text-center mb-4">
+					<i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
+					<h2 class="mt-3 text-white">User Play</h2>
+					<p class="text-muted">Please fill in your details below</p>
+				</div>
+
+				<form id="userForm" novalidate>
+					<div class="mb-3">
+						<label for="name" class="form-label text-white">
+							<i class="bi bi-person me-2"></i>Full Name
+						</label>
+						<input type="text" class="form-control" id="name" name="name" required>
+						<div class="invalid-feedback">
+							Please provide a valid name.
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="email" class="form-label text-white">
+							<i class="bi bi-envelope me-2"></i>Email Address
+						</label>
+						<input type="email" class="form-control" id="email" name="email" required>
+						<div class="invalid-feedback">
+							Please provide a valid email address.
+						</div>
+					</div>
+
+					<div class="mb-4">
+						<label for="dateOfBirth" class="form-label text-white">
+							<i class="bi bi-calendar3 me-2"></i>Date of Birth
+						</label>
+						<input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+						<div class="invalid-feedback">
+							Please provide your date of birth.
+						</div>
+					</div>
+
+					<div class="d-grid">
+						<button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <span id="submitText">
+                                    <i class="bi bi-check-circle me-2"></i>Submit
+                                </span>
+							<span id="submitSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display: none;"></span>
+						</button>
+					</div>
+				</form>
+
+				<div id="responseAlert" class="alert mt-4" style="display: none;" role="alert">
+					<i class="bi bi-info-circle me-2"></i>
+					<span id="responseText"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		const form = $('#userForm');
+		const submitBtn = $('#submitBtn');
+		const submitText = $('#submitText');
+		const submitSpinner = $('#submitSpinner');
+		const responseAlert = $('#responseAlert');
+		const responseText = $('#responseText');
+
+		form.on('submit', function(e) {
+			e.preventDefault();
+
+			// Validate form
+			if (form[0].checkValidity() === false) {
+				e.stopPropagation();
+				form.addClass('was-validated');
+				return;
+			}
+
+			// Disable submit button and show spinner
+			submitBtn.prop('disabled', true);
+			submitText.hide();
+			submitSpinner.show();
+			responseAlert.hide();
+
+			// Prepare form data
+			const formData = {
+				name: $('#name').val(),
+				email: $('#email').val(),
+				dateOfBirth: $('#dateOfBirth').val()
+			};
+
+			// Send AJAX request
+			$.ajax({
+				url: {$apiUrl},
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(formData),
+				success: function(response) {
+					// Show success response
+					if(response.successful === true) {
+						responseText.text(response.reply || 'Registration successful!');
+						responseAlert.show();
+						responseAlert.removeClass('alert-danger').addClass('alert-success');
+					} else {
+						responseText.text(response.reply || 'Unknown failure occurred!');
+						responseAlert.show();
+						responseAlert.removeClass('alert-success').addClass('alert-danger');
+					}
+
+					// todo: some more interesting stuff can get here
+				},
+				error: function(xhr) {
+					// Show error response
+					let errorMessage = 'An error occurred. Please try again.';
+
+					if (xhr.responseJSON && xhr.responseJSON.reply) {
+						errorMessage = xhr.responseJSON.reply;
+					} else if (xhr.responseText) {
+						try {
+							const response = JSON.parse(xhr.responseText);
+							errorMessage = response.reply || errorMessage;
+						} catch (e) {
+							errorMessage = xhr.responseText;
+						}
+					}
+
+					responseAlert.removeClass('alert-success').addClass('alert-danger');
+					responseText.text(errorMessage);
+					responseAlert.show();
+				},
+				complete: function() {
+					// Re-enable submit button and hide spinner
+					submitBtn.prop('disabled', false);
+					submitText.show();
+					submitSpinner.hide();
+				}
+			});
+
+			return false;
+		});
+	});
+</script>

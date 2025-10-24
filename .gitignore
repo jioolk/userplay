@@ -1,0 +1,5 @@
+www/assets
+vendor/
+.idea/
+.env
+temp/*
