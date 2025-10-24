@@ -23,13 +23,12 @@ else
 fi
 
 # Set proper permissions
-chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 chmod +x /var/www/html/bin/cli
 
 ## Run database migrations
 echo "Running database migrations..."
-bin/cli phinx:dump-phinx-config
+composer purge
 vendor/bin/phinx migrate -c temp/phinx.json -e all
 #vendor/bin/phinx status -c temp/phinx.json -e all
 

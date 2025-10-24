@@ -71,7 +71,7 @@ class InfoCommand extends BaseCommand
     }
 
     /**
-     * Recursively walks thru array of anytype params and makes single two dimensional array with nice values for table
+     * Recursively walks thru array of anytype params and makes single two-dimensional array with nice values for table
      *
      * @param mixed[]|mixed $params
      * @param int $keyLimit

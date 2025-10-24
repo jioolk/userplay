@@ -14,7 +14,7 @@ class UserModel
     public const TABLE_AUDIT = 'user_audit_log';
 
     public function __construct(
-        private \Nette\Database\Explorer $database,
+        private readonly \Nette\Database\Explorer $database,
     ) {
     }
 
